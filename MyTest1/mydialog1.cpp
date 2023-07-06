@@ -10,6 +10,8 @@
 #include <QtWidgets/QApplication>
 #include <QTime>
 #include <QTimer>
+#include <QMediaPlayer>
+#include <QSoundEffect>
 using namespace std;
 
 const int N = 1000008;
@@ -35,15 +37,15 @@ int endflag = 0;
 int startflag = 0;
 int change_back = 2;
 
-void MySleep(unsigned int msec){
+void MySleep(unsigned int msec) {
     QTime TargetTime = QTime::currentTime().addMSecs(msec);
-    while(QTime::currentTime() < TargetTime){
+    while(QTime::currentTime() < TargetTime) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     }
     return;
 }
 
-void MyDialog1::End(){
+void MyDialog1::End() {
     ui->diabox_label->setVisible(false);
     ui->label->setVisible(false);
     change_back = 2;
@@ -94,7 +96,7 @@ void MyDialog1::UpdateHeartRegret(){
     ui->regret_progressBar->setFormat(QString::number(ui->regret_progressBar->value(), 10));
 }
 
-void InitChoice(){
+void InitChoice() {
     choice_content[0][0] = "我们已经研发出预防药物了";
     choice_content[0][1] = "隐瞒";
     choice_content[1][0] = "同意";
@@ -120,7 +122,7 @@ void InitChoice(){
     return;
 }
 
-void ReadText1(){
+void ReadText1() {
     /*剧情文本读入*/
     int count = 0;
     QFile file1(":/mytxt/text1.txt");
@@ -130,7 +132,7 @@ void ReadText1(){
         return;
     }
     QTextStream stream1(&file1);
-    while(!stream1.atEnd()){
+    while(!stream1.atEnd()) {
         QString temp = stream1.read(1);
         text_flag1[++count] = temp[0];
         text1[count] = stream1.readLine();
@@ -139,7 +141,7 @@ void ReadText1(){
     return;
 }
 
-void MyDialog1::Begin(){
+void MyDialog1::Begin() {
     background = 2;
     change_back = 2;
     setBackground();
@@ -281,8 +283,9 @@ void MyDialog1::setPerson(int n){
     return;
 }
 
-void MyDialog1::setBackground(){
-    if(change_back == 2){
+void MyDialog1::setBackground() {
+    if(change_back == 2) // 常规背景切换
+    {
         switch(background){
         case 0: ui->background_label->setStyleSheet("border-image: url(:/mypic/lab.png);"); break;
         case 1: ui->background_label->setStyleSheet("border-image: url(:/mypic/title.jpg);"); break;
@@ -296,7 +299,8 @@ void MyDialog1::setBackground(){
         }
         return;
     }
-    if(change_back){
+    if(change_back) // 切到黑屏再切换背景
+    {
         ui->background_label->setStyleSheet("border-image: url(:/mypic/black.png);");
         ui->diabox_label->setVisible(false);
         ui->label->setVisible(false);
@@ -419,6 +423,7 @@ void MyDialog1::on_NexSenBtn_clicked(){
         case 40: background = 3; change_back = 1; break;
         case 50: background = 5; change_back = 1; break;
         case 52: regret++; break;
+            // todo
         }
         UpdateHeartRegret();
     }
@@ -427,6 +432,8 @@ void MyDialog1::on_NexSenBtn_clicked(){
 
 void MyDialog1::on_BtnC1_clicked()
 {
+    // todo
+    // 扫雷窗口关闭后再继续执行后面 while
     count_text1 += -1;
     //这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
     heart += heart_change[choice_id - 1][0];
