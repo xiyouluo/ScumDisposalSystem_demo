@@ -19,7 +19,7 @@ const int n = 58;
 int warn = 0;
 QString text1[N];
 QChar text_flag1[N];
-int CPD_flag = 0;
+bool CPD_flag = false;
 int count_text1 = 0;
 int input_text_flag = 0;
 int output_text_flag = 0;
@@ -27,8 +27,8 @@ int input_picture_flag = 0;
 int choice_id = 0;
 int choice_num[n] = {2, 2, 2, 3, 3, 2, 2, 2, 2, 2};
 QString choice_content[n][4];
-int heart_change[n][4] = {{5, 0}, {2, -10}, {10, -10}, {10, -20, -5}, {0, 0, 0}, {0, -5}, {0, 10}, {0, 0}, {-100, 0}, {0, 0}};
-int regret_change[n][4] = {{0, 0}, {0, 0}, {0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0}, {0, 0}, {10, 0}, {0, 0}, {0, 9}};
+int heart_change[n][3] = {{5, -10}, {2, -10}, {2, -10}, {10, -20, -5}, {0, 0, 0}, {0, -5}, {-1000, -1000}, {0, 10}};
+//int regret_change[n][3] = {{0, 0}, {0, 0}, {0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0}, {0, 0}, {10, 0}, {0, 0}, {0, 9}};
 int is_making_choice = 0;
 int heart = 60;
 int regret = 0;
@@ -37,7 +37,12 @@ int endflag = 0;
 int startflag = 0;
 int change_back = 2;
 QSoundEffect* bgm = new QSoundEffect;
-int jump[n][3];
+int jump[n][4] = {{-1, 1}, {6, 3}, {2, -1}, {-1, 3, 5}, {-1, -1, -1}, {0, -1}, {-1}, {-1, 3}};
+bool heroineGoFlag = true;
+bool enterGame1Flag = false;
+bool enterGame2Flag = false;
+bool game1WinFlag = false;
+bool game2WinFlag = false;
 
 void MySleep(unsigned int msec) {
     QTime TargetTime = QTime::currentTime().addMSecs(msec);
@@ -59,7 +64,7 @@ void InitChoice() {
 
     choice_content[3][0] = "你去";
     choice_content[3][1] = "他去";
-    choice_content[3][2] = "随便派个人去吧";
+    choice_content[3][2] = "随便找人去";
 
     choice_content[4][0] = "正常药物";
     choice_content[4][1] = "失活药物";
@@ -68,11 +73,11 @@ void InitChoice() {
     choice_content[5][0] = "是";
     choice_content[5][1] = "不是";
 
-    choice_content[6][0] = "告知真相";
-    choice_content[6][1] = "隐瞒";
+    choice_content[6][0] = "私下将研究数据传送给中心基地";
+    choice_content[6][1] = "利用实验室的γ病毒让他感染";
 
-    choice_content[7][0] = "扔到基地外自生自灭";
-    choice_content[7][1] = "作为实验体留在实验室";
+    choice_content[7][0] = "告诉他真相";
+    choice_content[7][1] = "隐瞒";
     return;
 }
 
@@ -241,7 +246,6 @@ void MyDialog1::Begin2() {
     return;
 }
 
-// 1
 void MyDialog1::StartGame() {
     background = 1;
     ui->diabox_label->setVisible(false);
@@ -375,7 +379,8 @@ void MyDialog1::MakeChoice() {
         ui->BtnC1->setText(choice_content[choice_id][0]);
         ui->BtnC2->setText(choice_content[choice_id][1]);
         ui->BtnC3->setText(choice_content[choice_id][2]);
-        if(choice_id == 4) {
+        if(choice_id == 4) // todo
+        {
             ui->temp_choice4->setVisible(true);
             ui->label->setText("他：好。<br>注：D能够使γ-PD失活，但是至少注射一次以上的γ-PD，CPD才能发挥作用");
         }
@@ -384,6 +389,7 @@ void MyDialog1::MakeChoice() {
         ui->BtnC3->setVisible(true);
     }
     is_making_choice = 1;
+    if (choice_id == 1) choice_id ++ ;
     choice_id ++ ;
     return;
 }
@@ -426,33 +432,58 @@ void MyDialog1::on_NexSenBtn_clicked() {
         ui->label->setWordWrap(true);
     }
     count_text1 ++ ;
-    if(output_text_flag == 1) {
+    if (output_text_flag == 1) {
         output_text_flag = 0;
         MakeChoice();
+    }
+    else if (enterGame1Flag) {
+        enterGame1Flag = false;
+        // interface to game1
+        // if (win) count_text1 ++ ;
+    }
+    else if (enterGame2Flag) {
+        enterGame1Flag = false;
+        // interface to game2
+        // if (palyer lose) count_text1 += 2;
     }
     else {
         setBackground();
         ui->label->setText(text1[count_text1]);
+        if (text_flag1[count_text1] == '<') enterGame1Flag = true;
         if((text_flag1[count_text1] == '@' || text_flag1[count_text1] == '#') && output_text_flag == 0)
             output_text_flag = 1;
         if(text_flag1[count_text1] == '~' || text_flag1[count_text1] == '@') {
-            if(count_text1 > 40) setPerson(2);
+            if(count_text1 > 40) setPerson(2); // change if-condition
             else setPerson(1);
         }
         else setPerson(0);
 
-        switch(count_text1){
-        case 4: background = 3; change_back = 1; break;
-        case 19: background = 0; change_back = 1; break;
-        case 23: background = 4; change_back = 1; break;
-        case 24: changeBgm(2); break;
-        case 34: background = 0; change_back = 1; break;
-        case 36: regret += 50; heart = 50; break;
-        case 40: background = 3; change_back = 1; break;
-        case 41: changeBgm(3); break;
-        case 50: background = 5; change_back = 1; break;
-        case 52: regret++; break;
-        // todo
+        switch(count_text1) {
+            case 11: background = 3; change_back = 1; break;
+            case 26: count_text1 = 30; break;
+            case 28: count_text1 = 30; break;
+            case 30: background = 0; change_back = 1; break;
+            case 35:
+                background = 4;
+                change_back = 1;
+                if (!heroineGoFlag) count_text1 = 46;
+                break;
+            case 46:
+                background = 0;
+                change_back = 1;
+                if (CPD_flag) count_text1 = 66;
+                else count_text1 = 64;
+                break;
+            //case 35: background = 4; change_back = 1; break;
+            //case 24: changeBgm(2); break;
+            //case 36: regret += 50; heart = 50; break;
+            //case 40: background = 3; change_back = 1; break;
+            //case 41: changeBgm(3); break;
+            //case 50: background = 5; change_back = 1; break;
+            //case 52: regret++; break;
+            case 66: background = 0; change_back = 1; break;
+            case 72: background = 5; change_back = 1; break;
+            // todo
         }
         UpdateHeartRegret();
     }
@@ -464,50 +495,59 @@ void MyDialog1::on_BtnC1_clicked() {
     // 扫雷窗口关闭后再继续执行后面 while 扫雷窗口 is open
     // MineSweeper w;
     // w.show();
+    //count_text1 += -1;
+    // 这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
+    //count_text1 += jump[choice_id - 1][0];
     count_text1 += -1;
-    //这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
     heart += heart_change[choice_id - 1][0];
-    if(choice_id == 9) regret = 90;
-    regret += regret_change[choice_id - 1][0];
+    if(choice_id == 9) regret = 90; // todo
+    //regret += regret_change[choice_id - 1][0];
     UpdateHeartRegret();
     ui->BtnC1->setVisible(false);
     ui->BtnC2->setVisible(false);
     ui->BtnC3->setVisible(false);
     is_making_choice = 0;
     ui->temp_choice4->setVisible(false);
-    CPD_flag = 0;
     on_NexSenBtn_clicked();
     return;
 }
 
 void MyDialog1::on_BtnC2_clicked() {
-    count_text1 += -1;
-    //这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
+    if (count_text1 == 49) // 数值是否要调整
+    {
+        if (CPD_flag) jump[6][1] = 11;
+        else jump[6][1] = 5;
+    }
+    if (choice_id - 1 == 3) heroineGoFlag = false;
+    //count_text1 += -1;
+    // 这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
+    count_text1 += jump[choice_id - 1][1];
     heart += heart_change[choice_id - 1][1];
-    regret += regret_change[choice_id - 1][1];
+    //regret += regret_change[choice_id - 1][1];
     UpdateHeartRegret();
     ui->BtnC1->setVisible(false);
     ui->BtnC2->setVisible(false);
     ui->BtnC3->setVisible(false);
     is_making_choice = 0;
     ui->temp_choice4->setVisible(false);
-    CPD_flag = 0;
     on_NexSenBtn_clicked();
     return;
 }
 
 void MyDialog1::on_BtnC3_clicked() {
-    count_text1 += -1;
-    //这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
+    if (choice_id - 1 == 3) heroineGoFlag = false;
+    if (choice_id - 1 == 4) CPD_flag = true;
+    //count_text1 += -1;
+    // 这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
+    count_text1 += jump[choice_id - 1][2];
     heart += heart_change[choice_id - 1][2];
-    regret += regret_change[choice_id - 1][2];
+    //regret += regret_change[choice_id - 1][2];
     UpdateHeartRegret();
     ui->BtnC1->setVisible(false);
     ui->BtnC2->setVisible(false);
     ui->BtnC3->setVisible(false);
     is_making_choice = 0;
     ui->temp_choice4->setVisible(false);
-    CPD_flag = 0;
     on_NexSenBtn_clicked();
     return;
 }
