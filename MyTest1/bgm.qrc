@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/bgm">
+        <file>music_1.wav</file>
+        <file>music_2.wav</file>
+        <file>music_3.wav</file>
+    </qresource>
+</RCC>

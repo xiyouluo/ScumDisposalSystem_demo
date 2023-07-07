@@ -37,4 +37,8 @@ private:
     Ui::MyDialog1 *ui;
 };
 
+void MySleep(unsigned int msec);
+void InitChoice();
+void ReadText1();
+
 #endif // MYDIALOG1_H

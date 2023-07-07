@@ -1,4 +1,3 @@
-#include "mydialog.h"
 #include "mydialog1.h"
 #include <QApplication>
 #include <QFileInfo>
@@ -21,10 +20,5 @@ int main(int argc, char *argv[])
     dlg->show();
     dlg->StartGame();
 
-
-    /*
-    MyDialog w;
-    w.show();
-    */
     return a.exec();
 }

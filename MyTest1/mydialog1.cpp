@@ -1,3 +1,4 @@
+#include <mineSweeper.h>
 #include "mydialog1.h"
 #include "ui_mydialog1.h"
 #include <QFileInfo>
@@ -10,7 +11,6 @@
 #include <QtWidgets/QApplication>
 #include <QTime>
 #include <QTimer>
-#include <QMediaPlayer>
 #include <QSoundEffect>
 using namespace std;
 
@@ -36,6 +36,7 @@ int background = 0;
 int endflag = 0;
 int startflag = 0;
 int change_back = 2;
+QSoundEffect* bgm = new QSoundEffect;
 
 void MySleep(unsigned int msec) {
     QTime TargetTime = QTime::currentTime().addMSecs(msec);
@@ -43,6 +44,74 @@ void MySleep(unsigned int msec) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     }
     return;
+}
+
+void InitChoice() {
+    choice_content[0][0] = "我们已经研发出预防药物了";
+    choice_content[0][1] = "隐瞒";
+    choice_content[1][0] = "同意";
+    choice_content[1][1] = "不同意";
+    choice_content[2][0] = "同意";
+    choice_content[2][1] = "不同意";
+    choice_content[3][0] = "你去";
+    choice_content[3][1] = "他去";
+    choice_content[3][2] = "随便派个人去吧";
+    choice_content[4][0] = "正常药物";
+    choice_content[4][1] = "失活药物";
+    choice_content[4][2] = "添加CPD的药物";
+    choice_content[5][0] = "是";
+    choice_content[5][1] = "不是";
+    choice_content[6][0] = "告知真相";
+    choice_content[6][1] = "隐瞒";
+    choice_content[7][0] = "索要基地指挥权";
+    choice_content[7][1] = "囚禁";
+    choice_content[8][0] = "告知真相";
+    choice_content[8][1] = "隐瞒";
+    choice_content[9][0] = "扔到基地外自生自灭";
+    choice_content[9][1] = "作为实验体留在实验室";
+    return;
+}
+
+void ReadText1() {
+    /*剧情文本读入*/
+    int count = 0;
+    QFile file1(":/mytxt/text1.txt");
+    if(!file1.open(QIODevice::ReadOnly)){
+        text1[1] = "暂且用这种方式报错，文件打开失败";
+        warn = 1;   //第一类报错，待弹出警告框
+        return;
+    }
+    QTextStream stream1(&file1);
+    while(!stream1.atEnd()) {
+        QString temp = stream1.read(1);
+        text_flag1[++count] = temp[0];
+        text1[count] = stream1.readLine();
+    }
+    file1.close();
+    return;
+}
+
+void changeBgm(int n) {
+    switch (n) {
+    case 1:
+        bgm->setSource(QUrl("qrc:/bgm/music_1.wav"));
+        bgm->setVolume(0.77);
+        bgm->setLoopCount(QSoundEffect::Infinite);
+        bgm->play();
+        break;
+    case 2:
+        bgm->setSource(QUrl("qrc:/bgm/music_2.wav"));
+        bgm->setVolume(0.77);
+        bgm->setLoopCount(QSoundEffect::Infinite);
+        bgm->play();
+        break;
+    case 3:
+        bgm->setSource(QUrl("qrc:/bgm/music_3.wav"));
+        bgm->setVolume(0.77);
+        bgm->setLoopCount(QSoundEffect::Infinite);
+        bgm->play();
+        break;
+    }
 }
 
 void MyDialog1::End() {
@@ -96,54 +165,10 @@ void MyDialog1::UpdateHeartRegret(){
     ui->regret_progressBar->setFormat(QString::number(ui->regret_progressBar->value(), 10));
 }
 
-void InitChoice() {
-    choice_content[0][0] = "我们已经研发出预防药物了";
-    choice_content[0][1] = "隐瞒";
-    choice_content[1][0] = "同意";
-    choice_content[1][1] = "不同意";
-    choice_content[2][0] = "同意";
-    choice_content[2][1] = "不同意";
-    choice_content[3][0] = "你去";
-    choice_content[3][1] = "他去";
-    choice_content[3][2] = "随便派个人去吧";
-    choice_content[4][0] = "正常药物";
-    choice_content[4][1] = "失活药物";
-    choice_content[4][2] = "添加CPD的药物";
-    choice_content[5][0] = "是";
-    choice_content[5][1] = "不是";
-    choice_content[6][0] = "告知真相";
-    choice_content[6][1] = "隐瞒";
-    choice_content[7][0] = "索要基地指挥权";
-    choice_content[7][1] = "囚禁";
-    choice_content[8][0] = "告知真相";
-    choice_content[8][1] = "隐瞒";
-    choice_content[9][0] = "扔到基地外自生自灭";
-    choice_content[9][1] = "作为实验体留在实验室";
-    return;
-}
-
-void ReadText1() {
-    /*剧情文本读入*/
-    int count = 0;
-    QFile file1(":/mytxt/text1.txt");
-    if(!file1.open(QIODevice::ReadOnly)){
-        text1[1] = "暂且用这种方式报错，文件打开失败";
-        warn = 1;   //第一类报错，待弹出警告框
-        return;
-    }
-    QTextStream stream1(&file1);
-    while(!stream1.atEnd()) {
-        QString temp = stream1.read(1);
-        text_flag1[++count] = temp[0];
-        text1[count] = stream1.readLine();
-    }
-    file1.close();
-    return;
-}
-
 void MyDialog1::Begin() {
     background = 2;
     change_back = 2;
+    changeBgm(1);
     setBackground();
     ui->label_begin1->setVisible(true);
     ui->label_begin1->setText("");
@@ -212,6 +237,7 @@ void MyDialog1::Begin2(){
     return;
 }
 
+// 1
 void MyDialog1::StartGame(){
     background = 1;
     ui->diabox_label->setVisible(false);
@@ -284,17 +310,17 @@ void MyDialog1::setPerson(int n){
 }
 
 void MyDialog1::setBackground() {
-    if(change_back == 2) // 常规背景切换
+    if(change_back == 2) // 常规切换背景
     {
-        switch(background){
+        switch(background) {
         case 0: ui->background_label->setStyleSheet("border-image: url(:/mypic/lab.png);"); break;
         case 1: ui->background_label->setStyleSheet("border-image: url(:/mypic/title.jpg);"); break;
         case 2: ui->background_label->setStyleSheet("border-image: url(:/mypic/Front.jpg);"); break;
-        case 3: ui->background_label->setStyleSheet("border-image: url(:/mypic/lab2.png);"); break;
+        case 3: ui->background_label->setStyleSheet("border-image: url(:/mypic/lab_2.png);"); break;
         case 4: ui->background_label->setStyleSheet("border-image: url(:/mypic/ruin.png);"); break;
         case 5: ui->background_label->setStyleSheet("border-image: url(:/mypic/seperate.png);"); break;
         case 6: ui->background_label->setStyleSheet("border-image: url(:/mypic/end.png);"); break;
-        case 7: ui->background_label->setStyleSheet("border-image: url(:/mypic/end2.jpg);"); break;
+        case 7: ui->background_label->setStyleSheet("border-image: url(:/mypic/end_2.jpg);"); break;
         case 9: ui->background_label->setStyleSheet("border-image: url(:/mypic/empty.png);"); break;
         }
         return;
@@ -309,16 +335,17 @@ void MyDialog1::setBackground() {
         ui->heart->setVisible(false);
         ui->regret->setVisible(false);
         ui->person1->setVisible(false);
+        //bgm->stop();
         MySleep(200);
-        switch(background){
+        switch(background) {
         case 0: ui->background_label->setStyleSheet("border-image: url(:/mypic/lab.png);"); break;
         case 1: ui->background_label->setStyleSheet("border-image: url(:/mypic/title.jpg);"); break;
         case 2: ui->background_label->setStyleSheet("border-image: url(:/mypic/Front.jpg);"); break;
-        case 3: ui->background_label->setStyleSheet("border-image: url(:/mypic/lab2.png);"); break;
+        case 3: ui->background_label->setStyleSheet("border-image: url(:/mypic/lab_2.png);"); break;
         case 4: ui->background_label->setStyleSheet("border-image: url(:/mypic/ruin.png);"); break;
         case 5: ui->background_label->setStyleSheet("border-image: url(:/mypic/seperate.png);"); break;
         case 6: ui->background_label->setStyleSheet("border-image: url(:/mypic/end.png);"); break;
-        case 7: ui->background_label->setStyleSheet("border-image: url(:/mypic/end2.jpg);"); break;
+        case 7: ui->background_label->setStyleSheet("border-image: url(:/mypic/end_2.jpg);"); break;
         case 9: ui->background_label->setStyleSheet("border-image: url(:/mypic/empty.png);"); break;
         }
     }
@@ -418,12 +445,14 @@ void MyDialog1::on_NexSenBtn_clicked(){
         case 4: background = 3; change_back = 1; break;
         case 19: background = 0; change_back = 1; break;
         case 23: background = 4; change_back = 1; break;
+        case 24: changeBgm(2); break;
         case 34: background = 0; change_back = 1; break;
         case 36: regret += 50; heart = 50; break;
         case 40: background = 3; change_back = 1; break;
+        case 41: changeBgm(3); break;
         case 50: background = 5; change_back = 1; break;
         case 52: regret++; break;
-            // todo
+        // todo
         }
         UpdateHeartRegret();
     }
@@ -433,7 +462,9 @@ void MyDialog1::on_NexSenBtn_clicked(){
 void MyDialog1::on_BtnC1_clicked()
 {
     // todo
-    // 扫雷窗口关闭后再继续执行后面 while
+    // 扫雷窗口关闭后再继续执行后面 while 扫雷窗口 is open
+    // MineSweeper w;
+    // w.show();
     count_text1 += -1;
     //这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
     heart += heart_change[choice_id - 1][0];
@@ -503,4 +534,3 @@ void MyDialog1::on_Start_clicked(){
     Begin();
     return;
 }
-

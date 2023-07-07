@@ -10,14 +10,14 @@
         <file>title.jpg</file>
         <file>Start.png</file>
         <file>Front.jpg</file>
-        <file>lab2.png</file>
         <file>black.png</file>
         <file>ruin.png</file>
         <file>seperate.png</file>
         <file>end.png</file>
         <file>brokenheart.png</file>
         <file>heart.png</file>
-        <file>end2.jpg</file>
         <file>zhananhurt.png</file>
+        <file>end_2.jpg</file>
+        <file>lab_2.png</file>
     </qresource>
 </RCC>

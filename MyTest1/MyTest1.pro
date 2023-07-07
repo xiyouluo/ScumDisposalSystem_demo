@@ -1,4 +1,4 @@
-QT       += core gui
+QT += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,15 +10,12 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mydialog.cpp \
     mydialog1.cpp
 
 HEADERS += \
-    mydialog.h \
     mydialog1.h
 
 FORMS += \
-    mydialog.ui \
     mydialog1.ui
 
 # Default rules for deployment.
@@ -27,5 +24,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
+    bgm.qrc \
     image.qrc \
     text.qrc
