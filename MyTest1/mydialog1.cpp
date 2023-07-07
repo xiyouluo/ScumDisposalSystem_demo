@@ -1,4 +1,4 @@
-#include <mineSweeper.h>
+#include "mineSweeper.h"
 #include "mydialog1.h"
 #include "ui_mydialog1.h"
 #include <QFileInfo>
@@ -37,6 +37,7 @@ int endflag = 0;
 int startflag = 0;
 int change_back = 2;
 QSoundEffect* bgm = new QSoundEffect;
+int jump[n][3];
 
 void MySleep(unsigned int msec) {
     QTime TargetTime = QTime::currentTime().addMSecs(msec);
@@ -47,28 +48,31 @@ void MySleep(unsigned int msec) {
 }
 
 void InitChoice() {
-    choice_content[0][0] = "我们已经研发出预防药物了";
+    choice_content[0][0] = "告诉他你已经研发出预防药物了";
     choice_content[0][1] = "隐瞒";
+
     choice_content[1][0] = "同意";
     choice_content[1][1] = "不同意";
+
     choice_content[2][0] = "同意";
     choice_content[2][1] = "不同意";
+
     choice_content[3][0] = "你去";
     choice_content[3][1] = "他去";
     choice_content[3][2] = "随便派个人去吧";
+
     choice_content[4][0] = "正常药物";
     choice_content[4][1] = "失活药物";
     choice_content[4][2] = "添加CPD的药物";
+
     choice_content[5][0] = "是";
     choice_content[5][1] = "不是";
+
     choice_content[6][0] = "告知真相";
     choice_content[6][1] = "隐瞒";
-    choice_content[7][0] = "索要基地指挥权";
-    choice_content[7][1] = "囚禁";
-    choice_content[8][0] = "告知真相";
-    choice_content[8][1] = "隐瞒";
-    choice_content[9][0] = "扔到基地外自生自灭";
-    choice_content[9][1] = "作为实验体留在实验室";
+
+    choice_content[7][0] = "扔到基地外自生自灭";
+    choice_content[7][1] = "作为实验体留在实验室";
     return;
 }
 
@@ -76,7 +80,7 @@ void ReadText1() {
     /*剧情文本读入*/
     int count = 0;
     QFile file1(":/mytxt/text1.txt");
-    if(!file1.open(QIODevice::ReadOnly)){
+    if(!file1.open(QIODevice::ReadOnly)) {
         text1[1] = "暂且用这种方式报错，文件打开失败";
         warn = 1;   //第一类报错，待弹出警告框
         return;
@@ -153,7 +157,7 @@ void MyDialog1::End() {
     }
 }
 
-void MyDialog1::UpdateHeartRegret(){
+void MyDialog1::UpdateHeartRegret() {
     MySleep(200);
     if(heart < 0) heart = 0;
     if(heart > 100) heart = 100;
@@ -180,7 +184,7 @@ void MyDialog1::Begin() {
         return;
     }
     QTextStream streambegin(&filebegin);
-    while(!streambegin.atEnd()){
+    while(!streambegin.atEnd()) {
         QString temp = streambegin.readLine();
         text.clear();
         text.append("<p style='line-height:150%'>").append("    ").append(temp);
@@ -194,12 +198,12 @@ void MyDialog1::Begin() {
     return;
 }
 
-void MyDialog1::Begin2(){
+void MyDialog1::Begin2() {
     QString text;
     ui->label_begin1->setText("");
     ui->hint_label->setVisible(false);
     QFile filebegin2(":/mytxt/text3.txt");
-    if(!filebegin2.open(QIODevice::ReadOnly)){
+    if(!filebegin2.open(QIODevice::ReadOnly)) {
         warn = 1;   //第一类报错，待弹出警告框
         return;
     }
@@ -238,7 +242,7 @@ void MyDialog1::Begin2(){
 }
 
 // 1
-void MyDialog1::StartGame(){
+void MyDialog1::StartGame() {
     background = 1;
     ui->diabox_label->setVisible(false);
     ui->label->setVisible(false);
@@ -360,17 +364,18 @@ void MyDialog1::setBackground() {
     return;
 }
 
-void MyDialog1::MakeChoice(){
-    if(choice_num[choice_id] == 2){
+void MyDialog1::MakeChoice() {
+    if(choice_num[choice_id] == 2) {
         ui->BtnC1->setText(choice_content[choice_id][0]);
         ui->BtnC2->setText(choice_content[choice_id][1]);
         ui->BtnC1->setVisible(true);
         ui->BtnC2->setVisible(true);
-    }else if(choice_num[choice_id] == 3){
+    }
+    else if(choice_num[choice_id] == 3) {
         ui->BtnC1->setText(choice_content[choice_id][0]);
         ui->BtnC2->setText(choice_content[choice_id][1]);
         ui->BtnC3->setText(choice_content[choice_id][2]);
-        if(choice_id == 4){
+        if(choice_id == 4) {
             ui->temp_choice4->setVisible(true);
             ui->label->setText("他：好。<br>注：D能够使γ-PD失活，但是至少注射一次以上的γ-PD，CPD才能发挥作用");
         }
@@ -379,17 +384,15 @@ void MyDialog1::MakeChoice(){
         ui->BtnC3->setVisible(true);
     }
     is_making_choice = 1;
-    choice_id++;
+    choice_id ++ ;
     return;
 }
 
-void MyDialog1::on_NexSenBtn_clicked(){
-    if(endflag){
-        return;
-    }
+void MyDialog1::on_NexSenBtn_clicked() {
+    if(endflag) return;
     if(startflag == 0) return;
-    if(startflag == 3) startflag++;
-    if(startflag == 2){
+    if(startflag == 3) startflag ++ ;
+    if(startflag == 2) {
         ui->diabox_label->setVisible(true);
         ui->label->setVisible(true);
         ui->label_begin1->setVisible(false);
@@ -402,12 +405,12 @@ void MyDialog1::on_NexSenBtn_clicked(){
         startflag = 3;
         //return;
     }
-    if(startflag == 1){
+    if(startflag == 1) {
         Begin2();
         startflag = 2;
         return;
     }
-    if(regret == 100){
+    if(regret == 100) {
         endflag = 1;
         background = 9;
         End();
@@ -415,32 +418,29 @@ void MyDialog1::on_NexSenBtn_clicked(){
     }
     if(startflag == 4) ui->hint_label->setVisible(false);
     if(is_making_choice) return;
-    if(input_text_flag == 0){
+    if(input_text_flag == 0) {
         ReadText1();
         input_text_flag = 1;
         ui->label->setAlignment(Qt::AlignHCenter);
         ui->label->setAlignment(Qt::AlignVCenter);
         ui->label->setWordWrap(true);
     }
-    count_text1++;
-    if(output_text_flag == 1){
+    count_text1 ++ ;
+    if(output_text_flag == 1) {
         output_text_flag = 0;
         MakeChoice();
-    }else{
+    }
+    else {
         setBackground();
         ui->label->setText(text1[count_text1]);
-        if((text_flag1[count_text1] == '@' || text_flag1[count_text1] == '#') && output_text_flag == 0){
+        if((text_flag1[count_text1] == '@' || text_flag1[count_text1] == '#') && output_text_flag == 0)
             output_text_flag = 1;
+        if(text_flag1[count_text1] == '~' || text_flag1[count_text1] == '@') {
+            if(count_text1 > 40) setPerson(2);
+            else setPerson(1);
         }
-        if(text_flag1[count_text1] == '~' || text_flag1[count_text1] == '@'){
-            if(count_text1 > 40){
-                setPerson(2);
-            }else{
-                setPerson(1);
-            }
-        }else{
-            setPerson(0);
-        }
+        else setPerson(0);
+
         switch(count_text1){
         case 4: background = 3; change_back = 1; break;
         case 19: background = 0; change_back = 1; break;
@@ -459,8 +459,7 @@ void MyDialog1::on_NexSenBtn_clicked(){
     return;
 }
 
-void MyDialog1::on_BtnC1_clicked()
-{
+void MyDialog1::on_BtnC1_clicked() {
     // todo
     // 扫雷窗口关闭后再继续执行后面 while 扫雷窗口 is open
     // MineSweeper w;
@@ -481,8 +480,7 @@ void MyDialog1::on_BtnC1_clicked()
     return;
 }
 
-void MyDialog1::on_BtnC2_clicked()
-{
+void MyDialog1::on_BtnC2_clicked() {
     count_text1 += -1;
     //这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
     heart += heart_change[choice_id - 1][1];
@@ -498,8 +496,7 @@ void MyDialog1::on_BtnC2_clicked()
     return;
 }
 
-void MyDialog1::on_BtnC3_clicked()
-{
+void MyDialog1::on_BtnC3_clicked() {
     count_text1 += -1;
     //这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
     heart += heart_change[choice_id - 1][2];
@@ -515,21 +512,17 @@ void MyDialog1::on_BtnC3_clicked()
     return;
 }
 
-void MyDialog1::mousePressEvent(QMouseEvent *event){
-    if(event->button()){
-        on_NexSenBtn_clicked();
-    }
+void MyDialog1::mousePressEvent(QMouseEvent *event) {
+    if(event->button()) on_NexSenBtn_clicked();
     return;
 }
 
-void MyDialog1::keyPressEvent(QKeyEvent *event){
-    if(event->key() == Qt::Key_F){
-        on_NexSenBtn_clicked();
-    }
+void MyDialog1::keyPressEvent(QKeyEvent *event) {
+    if(event->key() == Qt::Key_F) on_NexSenBtn_clicked();
     return;
 }
 
-void MyDialog1::on_Start_clicked(){
+void MyDialog1::on_Start_clicked() {
     ui->Start->setVisible(false);
     Begin();
     return;
