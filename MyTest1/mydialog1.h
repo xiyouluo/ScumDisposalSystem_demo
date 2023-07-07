@@ -2,6 +2,8 @@
 #define MYDIALOG1_H
 
 #include <QDialog>
+#include "mineSweeper.h"
+#include "FiveInARow.h"
 
 namespace Ui {
 class MyDialog1;
@@ -22,6 +24,7 @@ public:
     void Begin();
     void Begin2();
     void StartGame();
+    void handleGameEnd();
 
 private slots:
 
@@ -35,6 +38,8 @@ private slots:
 
 private:
     Ui::MyDialog1 *ui;
+    MineSweeper* game1;
+    FiveInARow* game2;
 };
 
 void MySleep(unsigned int msec);

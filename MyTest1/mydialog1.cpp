@@ -1,3 +1,4 @@
+#include "FiveInARow.h"
 #include "mineSweeper.h"
 #include "mydialog1.h"
 #include "ui_mydialog1.h"
@@ -25,7 +26,7 @@ int input_text_flag = 0;
 int output_text_flag = 0;
 int input_picture_flag = 0;
 int choice_id = 0;
-int choice_num[n] = {2, 2, 2, 3, 3, 2, 2, 2, 2, 2};
+int choice_num[n] = {2, 2, 2, 3, 3, 2, 2, 2};
 QString choice_content[n][4];
 int heart_change[n][3] = {{5, -10}, {2, -10}, {2, -10}, {10, -20, -5}, {0, 0, 0}, {0, -5}, {-1000, -1000}, {0, 10}};
 //int regret_change[n][3] = {{0, 0}, {0, 0}, {0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0}, {0, 0}, {10, 0}, {0, 0}, {0, 9}};
@@ -37,7 +38,7 @@ int endflag = 0;
 int startflag = 0;
 int change_back = 2;
 QSoundEffect* bgm = new QSoundEffect;
-int jump[n][4] = {{-1, 1}, {6, 3}, {2, -1}, {-1, 3, 5}, {-1, -1, -1}, {0, -1}, {-1}, {-1, 3}};
+int jump[n][4] = {{-1, 1}, {6, 3}, {2, -1}, {-1, 3, 5}, {-1, -1, -1}, {0, -1}, {-1, 5}, {-1, 3}};
 bool heroineGoFlag = true;
 bool enterGame1Flag = false;
 bool enterGame2Flag = false;
@@ -133,7 +134,8 @@ void MyDialog1::End() {
     ui->regret_progressBar->setVisible(false);
     ui->heart->setVisible(false);
     ui->regret->setVisible(false);
-    if(endflag == 1){
+    if(endflag == 1) // 第一版的结局
+    {
         ui->label_end1->setText("谢谢你改变了我的命运，让我能够开始新的生活");
         ui->label_end2->setText("这段时光里，感谢你教会了我理智、冷静与勇敢");
         ui->label_end3->setText("希望现实中的你不要遇到像他一样的人");
@@ -159,6 +161,52 @@ void MyDialog1::End() {
         background = 7;
         setBackground();
         return;
+    }
+    else if (endflag == 2) // bad end 1 & 2
+    {
+        ui->label_end2->setText("他对你的好感值清零");
+        ui->label_end3->setText("你没能改变我的命运");
+        ui->label_end4->setText("游戏失败");
+        MySleep(2000);
+        ui->label_end2->setVisible(true);
+        MySleep(2000);
+        ui->label_end3->setVisible(true);
+        MySleep(2000);
+        ui->label_end4->setVisible(true);
+        MySleep(2000);
+        ui->label_end2->setVisible(false);
+        ui->label_end3->setVisible(false);
+        ui->label_end4->setVisible(false);
+        // 处理结束的界面之类的
+    }
+    else if (endflag == 3) // bad end 3
+    {
+        ui->label_end1->setText("你改变了我的悲惨结局");
+        ui->label_end2->setText("但是很遗憾");
+        ui->label_end3->setText("由于你没有成功阻止他的阴谋，除你所在基地以外其他基地均已沦陷");
+        ui->label_end4->setText("你们成为了唯一的一座孤岛");
+        ui->label_end5->setText("不久之后因为物资问题同样被吞噬，人类的历史画上句号");
+        MySleep(2000);
+        ui->label_end1->setVisible(true);
+        MySleep(2000);
+        ui->label_end2->setVisible(true);
+        MySleep(2000);
+        ui->label_end3->setVisible(true);
+        MySleep(2000);
+        ui->label_end4->setVisible(true);
+        MySleep(2000);
+        ui->label_end5->setVisible(true);
+        MySleep(3000);
+        ui->label_end1->setVisible(false);
+        ui->label_end2->setVisible(false);
+        ui->label_end3->setVisible(false);
+        ui->label_end4->setVisible(false);
+        ui->label_end5->setVisible(false);
+        // 处理结束的界面之类的
+    }
+    else if (endflag == 4) // normal end
+    {
+        // to be continued
     }
 }
 
@@ -189,13 +237,13 @@ void MyDialog1::Begin() {
         return;
     }
     QTextStream streambegin(&filebegin);
-    while(!streambegin.atEnd()) {
+    /*while(!streambegin.atEnd()) {
         QString temp = streambegin.readLine();
         text.clear();
         text.append("<p style='line-height:150%'>").append("    ").append(temp);
         ui->label_begin1->setText(text);
         MySleep(50);
-    }
+    }*/
     filebegin.close();
     ui->hint_label->setVisible(true);
     //MySleep(2000);
@@ -213,13 +261,13 @@ void MyDialog1::Begin2() {
         return;
     }
     QTextStream streambegin2(&filebegin2);
-    while(!streambegin2.atEnd()){
+    /*while(!streambegin2.atEnd()){
         QString temp = streambegin2.readLine();
         text.clear();
         text.append("<p style='line-height:150%'>").append("    ").append(temp);
         ui->label_begin1->setText(text);
         MySleep(50);
-    }
+    }*/
     filebegin2.close();
     text.append("<br>");
     ui->label_begin1->setText(text);
@@ -389,7 +437,6 @@ void MyDialog1::MakeChoice() {
         ui->BtnC3->setVisible(true);
     }
     is_making_choice = 1;
-    if (choice_id == 1) choice_id ++ ;
     choice_id ++ ;
     return;
 }
@@ -438,31 +485,43 @@ void MyDialog1::on_NexSenBtn_clicked() {
     }
     else if (enterGame1Flag) {
         enterGame1Flag = false;
-        // interface to game1
+        game1 = new MineSweeper;
+        game1->show();
+        count_text1 -- ;
         // if (win) count_text1 ++ ;
     }
     else if (enterGame2Flag) {
-        enterGame1Flag = false;
-        // interface to game2
-        // if (palyer lose) count_text1 += 2;
+        enterGame2Flag = false;
+        game2 = new FiveInARow;
+        game2->show();
+        if (game2->Winner == Piece::PLAYER1) count_text1 -- ;
+        else if (game2->Winner == Piece::PLAYER2) count_text1 += 2 ;
     }
     else {
         setBackground();
         ui->label->setText(text1[count_text1]);
         if (text_flag1[count_text1] == '<') enterGame1Flag = true;
+        if (text_flag1[count_text1] == '>') enterGame2Flag = true;
         if((text_flag1[count_text1] == '@' || text_flag1[count_text1] == '#') && output_text_flag == 0)
             output_text_flag = 1;
         if(text_flag1[count_text1] == '~' || text_flag1[count_text1] == '@') {
-            if(count_text1 > 40) setPerson(2); // change if-condition
+            if(count_text1 > 72) setPerson(2); // change if-condition
             else setPerson(1);
         }
         else setPerson(0);
 
         switch(count_text1) {
-            case 11: background = 3; change_back = 1; break;
-            case 26: count_text1 = 30; break;
-            case 28: count_text1 = 30; break;
+            case 4: background = 3; change_back = 1; break;
+            case 8: background = 3; change_back = 1; break;
+            case 26: background = 0; change_back = 1; count_text1 = 30; break;
+            case 28: background = 0; change_back = 1; count_text1 = 30; break;
             case 30: background = 0; change_back = 1; break;
+            case 34:
+                background = 4;
+                change_back = 1;
+                if (!heroineGoFlag) count_text1 = 46;
+                else count_text1 ++ ;
+                break;
             case 35:
                 background = 4;
                 change_back = 1;
@@ -483,6 +542,7 @@ void MyDialog1::on_NexSenBtn_clicked() {
             //case 52: regret++; break;
             case 66: background = 0; change_back = 1; break;
             case 72: background = 5; change_back = 1; break;
+            //default: background = 3; change_back = 1; break;
             // todo
         }
         UpdateHeartRegret();
@@ -491,14 +551,9 @@ void MyDialog1::on_NexSenBtn_clicked() {
 }
 
 void MyDialog1::on_BtnC1_clicked() {
-    // todo
-    // 扫雷窗口关闭后再继续执行后面 while 扫雷窗口 is open
-    // MineSweeper w;
-    // w.show();
-    //count_text1 += -1;
+    //count_text1 += 1;
     // 这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
-    //count_text1 += jump[choice_id - 1][0];
-    count_text1 += -1;
+    count_text1 += jump[choice_id - 1][0];
     heart += heart_change[choice_id - 1][0];
     if(choice_id == 9) regret = 90; // todo
     //regret += regret_change[choice_id - 1][0];
@@ -509,15 +564,12 @@ void MyDialog1::on_BtnC1_clicked() {
     is_making_choice = 0;
     ui->temp_choice4->setVisible(false);
     on_NexSenBtn_clicked();
+    if (choice_id - 1 == 1) choice_id ++ ;
+    if (choice_id - 1 == 5 && heroineGoFlag) choice_id ++ ;
     return;
 }
 
 void MyDialog1::on_BtnC2_clicked() {
-    if (count_text1 == 49) // 数值是否要调整
-    {
-        if (CPD_flag) jump[6][1] = 11;
-        else jump[6][1] = 5;
-    }
     if (choice_id - 1 == 3) heroineGoFlag = false;
     //count_text1 += -1;
     // 这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
@@ -531,12 +583,17 @@ void MyDialog1::on_BtnC2_clicked() {
     is_making_choice = 0;
     ui->temp_choice4->setVisible(false);
     on_NexSenBtn_clicked();
+    if (choice_id - 1 == 1) choice_id ++ ;
+    if (choice_id - 1 == 5 && heroineGoFlag) choice_id ++ ;
     return;
 }
 
 void MyDialog1::on_BtnC3_clicked() {
     if (choice_id - 1 == 3) heroineGoFlag = false;
-    if (choice_id - 1 == 4) CPD_flag = true;
+    if (choice_id - 1 == 4) {
+        CPD_flag = true;
+        jump[6][1] = 11;
+    }
     //count_text1 += -1;
     // 这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
     count_text1 += jump[choice_id - 1][2];

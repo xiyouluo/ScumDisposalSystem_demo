@@ -19,5 +19,19 @@
         <file>zhananhurt.png</file>
         <file>end_2.jpg</file>
         <file>lab_2.png</file>
+        <file>blank.jpg</file>
+        <file>mine.jpg</file>
+        <file>mine_step.jpg</file>
+        <file>number0.jpg</file>
+        <file>number1.jpg</file>
+        <file>number2.jpg</file>
+        <file>number3.jpg</file>
+        <file>number4.jpg</file>
+        <file>number5.jpg</file>
+        <file>number6.jpg</file>
+        <file>number7.jpg</file>
+        <file>number8.jpg</file>
+        <file>pblack.png</file>
+        <file>pwhite.png</file>
     </qresource>
 </RCC>

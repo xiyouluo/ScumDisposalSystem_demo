@@ -10,7 +10,8 @@ class MineSweeper : public QWidget
 {
     Q_OBJECT
 public:
-    static const int numMines = 99; // set the number of mines here
+    static const int SIZE = 35;
+    static const int numMines = SIZE * SIZE; // set the number of mines here
     explicit MineSweeper(QWidget *parent = nullptr);
     void reset();
 
@@ -18,9 +19,9 @@ private slots:
     void onButtonClicked();
 
 private:
-    QPushButton *buttons[10][10];
-    bool mines[10][10];
-    bool revealed[10][10];
+    QPushButton *buttons[SIZE][SIZE];
+    bool mines[SIZE][SIZE];
+    bool revealed[SIZE][SIZE];
     int unrevealedSafeCells;
     QGridLayout *layout;
 
