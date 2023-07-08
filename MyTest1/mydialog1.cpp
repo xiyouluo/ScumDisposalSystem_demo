@@ -511,8 +511,8 @@ void MyDialog1::on_NexSenBtn_clicked() {
         else setPerson(0);
 
         switch(count_text1) {
-            case 4: background = 3; change_back = 1; break;
-            case 8: background = 3; change_back = 1; break;
+            //case 4: background = 3; change_back = 1; break;
+            case 11: background = 3; change_back = 1; break;
             case 26: background = 0; change_back = 1; count_text1 = 30; break;
             case 28: background = 0; change_back = 1; count_text1 = 30; break;
             case 30: background = 0; change_back = 1; break;
@@ -564,8 +564,9 @@ void MyDialog1::on_BtnC1_clicked() {
     is_making_choice = 0;
     ui->temp_choice4->setVisible(false);
     on_NexSenBtn_clicked();
-    if (choice_id - 1 == 1) choice_id ++ ;
+    //if (choice_id - 1 == 1) choice_id ++ ;
     if (choice_id - 1 == 5 && heroineGoFlag) choice_id ++ ;
+    if (count_text1 == 5) background = 4; change_back = 1;
     return;
 }
 
@@ -583,7 +584,7 @@ void MyDialog1::on_BtnC2_clicked() {
     is_making_choice = 0;
     ui->temp_choice4->setVisible(false);
     on_NexSenBtn_clicked();
-    if (choice_id - 1 == 1) choice_id ++ ;
+    if (choice_id - 1 == 0) choice_id ++ ;
     if (choice_id - 1 == 5 && heroineGoFlag) choice_id ++ ;
     return;
 }
