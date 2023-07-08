@@ -273,13 +273,13 @@ void MyDialog1::Begin() {
         return;
     }
     QTextStream streambegin(&filebegin);
-    while(!streambegin.atEnd()) {
+    /*while(!streambegin.atEnd()) {
         QString temp = streambegin.readLine();
         text.clear();
         text.append("<p style='line-height:150%'>").append("    ").append(temp);
         ui->label_begin1->setText(text);
         MySleep(50);
-    }
+    }*/
     filebegin.close();
     ui->hint_label->setVisible(true);
     //MySleep(2000);
@@ -297,13 +297,13 @@ void MyDialog1::Begin2() {
         return;
     }
     QTextStream streambegin2(&filebegin2);
-    while(!streambegin2.atEnd()){
+    /*while(!streambegin2.atEnd()){
         QString temp = streambegin2.readLine();
         text.clear();
         text.append("<p style='line-height:150%'>").append("    ").append(temp);
         ui->label_begin1->setText(text);
         MySleep(50);
-    }
+    }*/
     filebegin2.close();
     text.append("<br>");
     ui->label_begin1->setText(text);
