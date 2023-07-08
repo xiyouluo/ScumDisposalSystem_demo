@@ -24,10 +24,8 @@ public:
     void Begin();
     void Begin2();
     void StartGame();
-    void handleGameEnd();
 
 private slots:
-
     void on_NexSenBtn_clicked();
     void on_BtnC1_clicked();
     void on_BtnC2_clicked();
@@ -35,6 +33,7 @@ private slots:
     void mousePressEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void on_Start_clicked();
+    void handleGameEnd();
 
 private:
     Ui::MyDialog1 *ui;

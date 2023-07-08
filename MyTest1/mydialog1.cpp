@@ -493,9 +493,8 @@ void MyDialog1::on_NexSenBtn_clicked() {
     else if (enterGame2Flag) {
         enterGame2Flag = false;
         game2 = new FiveInARow;
+        connect(game2, &FiveInARow::gameEnded, this, &MyDialog1::handleGameEnd);
         game2->show();
-        if (game2->Winner == Piece::PLAYER1) count_text1 -- ;
-        else if (game2->Winner == Piece::PLAYER2) count_text1 += 2 ;
     }
     else {
         setBackground();
@@ -626,4 +625,9 @@ void MyDialog1::on_Start_clicked() {
     ui->Start->setVisible(false);
     Begin();
     return;
+}
+
+void MyDialog1::handleGameEnd() {
+    if (game2->Winner == Piece::PLAYER1) count_text1 -- ;
+    else if (game2->Winner == Piece::PLAYER2) count_text1 ++ ;
 }
