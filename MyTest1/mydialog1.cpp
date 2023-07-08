@@ -661,6 +661,7 @@ void MyDialog1::on_BtnC2_clicked() {
     ui->temp_choice4->setVisible(false);
     on_NexSenBtn_clicked();
     if (choice_id - 1 == 0) choice_id ++ ;
+    if(choice_id - 1 == 1) choice_id ++ ;
     if (choice_id - 1 == 5 && heroineGoFlag) choice_id ++ ;
     return;
 }
