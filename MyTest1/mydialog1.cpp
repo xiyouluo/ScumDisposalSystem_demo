@@ -38,7 +38,7 @@ int endflag = 0;
 int startflag = 0;
 int change_back = 2;
 QSoundEffect* bgm = new QSoundEffect;
-int jump[n][4] = {{-1, 1}, {6, 3}, {2, -1}, {-1, 3, 5}, {-1, -1, -1}, {0, -1}, {-1, 5}, {-1, 3}};
+int jump[n][4] = {{-1, 1}, {6, 3}, {3, -1}, {-1, 3, 5}, {-1, -1, -1}, {0, -1}, {-1, 5}, {6, -1}};
 bool heroineGoFlag = true;
 bool enterGame1Flag = false;
 bool enterGame2Flag = false;
@@ -124,7 +124,8 @@ void changeBgm(int n) {
     }
 }
 
-void MyDialog1::End() {
+void MyDialog1::End()
+{
     ui->diabox_label->setVisible(false);
     ui->label->setVisible(false);
     change_back = 2;
@@ -134,7 +135,9 @@ void MyDialog1::End() {
     ui->regret_progressBar->setVisible(false);
     ui->heart->setVisible(false);
     ui->regret->setVisible(false);
-    if(endflag == 1) // 第一版的结局
+    ui->person1->setVisible(false);
+    ui->person2->setVisible(false);
+    if (endflag == 1) // 第一版的结局
     {
         ui->label_end1->setText("谢谢你改变了我的命运，让我能够开始新的生活");
         ui->label_end2->setText("这段时光里，感谢你教会了我理智、冷静与勇敢");
@@ -177,15 +180,19 @@ void MyDialog1::End() {
         ui->label_end2->setVisible(false);
         ui->label_end3->setVisible(false);
         ui->label_end4->setVisible(false);
+        change_back = 2;
+        background = 7;
+        setBackground();
+        return;
         // 处理结束的界面之类的
     }
     else if (endflag == 3) // bad end 3
     {
         ui->label_end1->setText("你改变了我的悲惨结局");
-        ui->label_end2->setText("但是很遗憾");
-        ui->label_end3->setText("由于你没有成功阻止他的阴谋，除你所在基地以外其他基地均已沦陷");
-        ui->label_end4->setText("你们成为了唯一的一座孤岛");
-        ui->label_end5->setText("不久之后因为物资问题同样被吞噬，人类的历史画上句号");
+        ui->label_end2->setText("但是由于你没有成功阻止他的阴谋，除你所在基地以外其他基地均已沦陷");
+        ui->label_end3->setText("你们成为了唯一的一座孤岛");
+        ui->label_end4->setText("不久之后因为物资问题同样被吞噬，人类的历史画上句号");
+        ui->label_end5->setText("很遗憾，游戏失败");
         MySleep(2000);
         ui->label_end1->setVisible(true);
         MySleep(2000);
@@ -202,11 +209,40 @@ void MyDialog1::End() {
         ui->label_end3->setVisible(false);
         ui->label_end4->setVisible(false);
         ui->label_end5->setVisible(false);
+        change_back = 2;
+        background = 7;
+        setBackground();
+        return;
         // 处理结束的界面之类的
     }
     else if (endflag == 4) // normal end
     {
         // to be continued
+        ui->label_end1->setText("你成功改变了我的悲惨结局");
+        ui->label_end2->setText("但是你没有阻止他的阴谋，人类的历史将在他手中画上句号");
+        ui->label_end3->setText("我很感谢你能让我活下来，但这却不是我想要的结局");
+        ui->label_end4->setText("你马上就要回到现实了，希望现实中的你不要遇到像他一样的人");
+        ui->label_end5->setText("如果遇到了也请不要作出和游戏中一样的选择");
+        MySleep(2000);
+        ui->label_end1->setVisible(true);
+        MySleep(2000);
+        ui->label_end2->setVisible(true);
+        MySleep(2000);
+        ui->label_end3->setVisible(true);
+        MySleep(2000);
+        ui->label_end4->setVisible(true);
+        MySleep(2000);
+        ui->label_end5->setVisible(true);
+        MySleep(3000);
+        ui->label_end1->setVisible(false);
+        ui->label_end2->setVisible(false);
+        ui->label_end3->setVisible(false);
+        ui->label_end4->setVisible(false);
+        ui->label_end5->setVisible(false);
+        change_back = 2;
+        background = 7;
+        setBackground();
+        return;
     }
 }
 
@@ -237,13 +273,13 @@ void MyDialog1::Begin() {
         return;
     }
     QTextStream streambegin(&filebegin);
-    /*while(!streambegin.atEnd()) {
+    while(!streambegin.atEnd()) {
         QString temp = streambegin.readLine();
         text.clear();
         text.append("<p style='line-height:150%'>").append("    ").append(temp);
         ui->label_begin1->setText(text);
         MySleep(50);
-    }*/
+    }
     filebegin.close();
     ui->hint_label->setVisible(true);
     //MySleep(2000);
@@ -261,13 +297,13 @@ void MyDialog1::Begin2() {
         return;
     }
     QTextStream streambegin2(&filebegin2);
-    /*while(!streambegin2.atEnd()){
+    while(!streambegin2.atEnd()){
         QString temp = streambegin2.readLine();
         text.clear();
         text.append("<p style='line-height:150%'>").append("    ").append(temp);
         ui->label_begin1->setText(text);
         MySleep(50);
-    }*/
+    }
     filebegin2.close();
     text.append("<br>");
     ui->label_begin1->setText(text);
@@ -392,7 +428,7 @@ void MyDialog1::setBackground() {
         ui->regret->setVisible(false);
         ui->person1->setVisible(false);
         //bgm->stop();
-        MySleep(200);
+        MySleep(500);
         switch(background) {
         case 0: ui->background_label->setStyleSheet("border-image: url(:/mypic/lab.png);"); break;
         case 1: ui->background_label->setStyleSheet("border-image: url(:/mypic/title.jpg);"); break;
@@ -442,7 +478,11 @@ void MyDialog1::MakeChoice() {
 }
 
 void MyDialog1::on_NexSenBtn_clicked() {
-    if(endflag) return;
+    if(endflag)
+    {
+        End();
+        return;
+    }
     if(startflag == 0) return;
     if(startflag == 3) startflag ++ ;
     if(startflag == 2) {
@@ -463,12 +503,12 @@ void MyDialog1::on_NexSenBtn_clicked() {
         startflag = 2;
         return;
     }
-    if(regret == 100) {
+    /*if(regret == 100) {
         endflag = 1;
         background = 9;
         End();
         return;
-    }
+    }*/
     if(startflag == 4) ui->hint_label->setVisible(false);
     if(is_making_choice) return;
     if(input_text_flag == 0) {
@@ -539,8 +579,43 @@ void MyDialog1::on_NexSenBtn_clicked() {
             //case 41: changeBgm(3); break;
             //case 50: background = 5; change_back = 1; break;
             //case 52: regret++; break;
-            case 66: background = 0; change_back = 1; break;
+            case 54:
+                endflag = 2;
+                background = 9;
+                return;
+            case 55:
+                endflag = 2;
+                background = 9;
+                return;
+            case 60:
+                endflag = 2;
+                background = 9;
+                return;
+            case 61:
+                endflag = 2;
+                background = 9;
+                return;
+            case 64:
+                endflag = 3;
+                background = 9;
+                return;
+            case 66:
+                heart += 100;
+                //UpdateHeartRegret();
+                endflag = 4;
+                background = 9;
+                break;
             case 72: background = 5; change_back = 1; break;
+            case 85:
+                regret+=100;
+                endflag = 1;
+                background = 9;
+                break;
+            case 88:
+                regret+=100;
+                endflag = 1;
+                background = 9;
+                break;
             //default: background = 3; change_back = 1; break;
             // todo
         }
@@ -550,8 +625,8 @@ void MyDialog1::on_NexSenBtn_clicked() {
 }
 
 void MyDialog1::on_BtnC1_clicked() {
-    if (choice_id - 1 == 1) background = 3; change_back = 1;
-    if (choice_id - 1 == 2) background = 3; change_back = 1;
+    if (choice_id - 1 == 1) {background = 3; change_back = 1;}
+    if (choice_id - 1 == 2) {background = 3; change_back = 1;}
     //count_text1 += 1;
     // 这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
     count_text1 += jump[choice_id - 1][0];
