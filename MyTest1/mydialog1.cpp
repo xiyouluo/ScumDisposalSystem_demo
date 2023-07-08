@@ -551,6 +551,8 @@ void MyDialog1::on_NexSenBtn_clicked() {
 }
 
 void MyDialog1::on_BtnC1_clicked() {
+    if (choice_id - 1 == 1) background = 3; change_back = 1;
+    if (choice_id - 1 == 2) background = 3; change_back = 1;
     //count_text1 += 1;
     // 这里通过对count_text1的调整进入分支剧情，具体数值需要文本内容确定后填写
     count_text1 += jump[choice_id - 1][0];
@@ -564,9 +566,9 @@ void MyDialog1::on_BtnC1_clicked() {
     is_making_choice = 0;
     ui->temp_choice4->setVisible(false);
     on_NexSenBtn_clicked();
-    //if (choice_id - 1 == 1) choice_id ++ ;
+    if (choice_id - 1 == 1) choice_id ++ ;
     if (choice_id - 1 == 5 && heroineGoFlag) choice_id ++ ;
-    if (count_text1 == 5) background = 4; change_back = 1;
+
     return;
 }
 
