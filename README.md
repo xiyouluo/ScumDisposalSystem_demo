@@ -21,7 +21,7 @@ This project is a narrative-driven game demo, created in the Spring of 2023. The
    - **Background Music Creation**: Composed an original music track using FL Studio, which was used as the game's background music (BGM).
    - **Mini-Game Development**: Reimplemented two mini-games—*Minesweeper* and *Gomoku*. Both games included core mechanics (Gomoku supported PvP and PvE modes) and integrated them into the main game.
    - **Branching Storyline Implementation**: Enhanced the initial single-threaded storyline by implementing code for branching storylines, scene transitions.
-2. **[@poji111](https://github.com/poii111)** - Contributed to overall game planning, story design, UI design, and ending implementation:
+2. **[@poji111](https://github.com/poji111)** - Contributed to overall game planning, story design, UI design, and ending implementation:
    - **Overall Planning**: Contributed to the overall game concept, coordinated the details of different game sections.
    - **Story Design**: Wrote all in-game narratives, including the prologue, epilogue, and integration of mini-games with the storyline.
    - **UI Design**: Contributed to the artistic aspects of the game, designed the main game interface, dialogue boxes, and overall layout.
