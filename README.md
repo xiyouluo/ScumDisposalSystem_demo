@@ -1,4 +1,4 @@
-# ScumDisposalSystem_demo
+# Scumbag-Disposal-System_Beta
 
 ## Project Overview
 
@@ -6,7 +6,7 @@ This project is a narrative-driven game demo, created in the Spring of 2023. The
 
 ## Important Notes
 
-- **Qt Version**: This project uses **Qt 6.5**. In addition, you will need to include the **Qt Multimedia library** to handle background music (BGM) and other multimedia features.
+- **Qt Version**: This project uses **Qt 6.5**. In addition, you will need to include the Qt **Multimedia** library to handle background music (BGM) and other multimedia features.
 
 ## Installation and Usage
 
